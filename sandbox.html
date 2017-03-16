@@ -1,0 +1,39 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSKit Sandbox</title>
+    <script src="param.js"></script>
+    <script src="entry.js"></script>
+    <script src="lex-basic.js"></script>
+    <script src="lex-sequence.js"></script>
+    <script src="lex-babylon.js"></script>
+    <script src="kit.js"></script>
+</head>
+
+<body id="body">
+<h1>Howdy</h1>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+      //$k('[ 1 2 3 ] 1 nth')
+      //$k('[ 1 2 3 ] [ 4 5 6 7 ] zip')
+      //$k('3 7 *')
+
+      //$k('[ 1 2 3 ] "7 *" map')
+
+      //$k('"engine" variable')
+      //$k('engine 42 !')
+      //$k('engine @ 2 *  engine swap !  engine @')
+
+      //$k('1 6 to')
+      //$k(`1 6 to   "pop 'cube\\0'" map`)
+      $k(`20.0 cur-engine !  @cur-engine`)
+      console.log(_interp.stack)
+  });
+</script>
+
+
+</body>
+</html>

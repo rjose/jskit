@@ -1,0 +1,30 @@
+let chap1_forth = `
+# NOTE: In all constructors, the name of the item being constructed is the first
+#       parameter. This creates a variable that can be fetched via @<name>
+#
+#       Also, any functions that require a scene or engine will automatically use
+#       @cur-engine and @cur-scene
+
+# Creates an engine and sets @cur-engine to it
+"engine1" "gameCanvas" Engine
+
+# Creates a new scene and sets @cur-scene to it
+"scene1" Scene
+
+
+"camera1"  5 5 -5 Vector3  FreeCamera
+0 0 0 Vector3  @camera1  setTarget
+@camera1
+
+"light1" 0 1 0 Vector3  HemisphericLight
+
+"cube1" 1 Mesh.CreateBox
+
+# Execute engine.runRenderLoop
+run
+`
+
+document.addEventListener("DOMContentLoaded", function(event) {
+    $k(chap1_forth)
+    console.log(_interp.stack)
+});
