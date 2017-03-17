@@ -179,6 +179,19 @@ function add_babylon_lexicon(interp) {
 
 
     // --------------------------------------------------------------------
+    /** Sets the x position of an object
+    ( value object --  )
+    */
+    // --------------------------------------------------------------------
+    interp.add_generic_entry("!position.x", interp => {
+        let param_object = interp.pop()
+        let param_value = interp.pop()
+
+        param_object.value.position.x = param_value.get_value()
+    })
+
+
+    // --------------------------------------------------------------------
     /** Run render loop
     ( -- )
     */

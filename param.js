@@ -4,6 +4,19 @@ class Param {
         this.value = value
         this.custom_type = ''
     }
+
+    get_value() {
+        switch(this.type) {
+            case 'I':
+                return parseInt(this.value)
+
+            case 'D':
+                return parseFloat(this.value)
+
+            default:
+                return this.value
+        }
+    }
 }
 
 class DoubleParam extends Param {
