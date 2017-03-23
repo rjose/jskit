@@ -192,6 +192,62 @@ function add_babylon_lexicon(interp) {
 
 
     // --------------------------------------------------------------------
+    /** Sets the value of an object's field (can be nested)
+    ( value object field --  )
+    */
+    // --------------------------------------------------------------------
+    interp.add_generic_entry("!field", interp => {
+        let param_field = interp.pop()
+        let param_object = interp.pop()
+        let param_value = interp.pop()
+
+        let fields = param_field.value.split(".")
+        let last_field = fields.pop()
+        let obj = param_object.value
+        for (let i=0; i < fields.length; i++) {
+            obj = obj[fields[i]]
+        }
+        obj[last_field] = param_value.get_value()
+    })
+
+
+    // --------------------------------------------------------------------
+    /** Gets the value of an object's field (can be nested)
+    ( object field --  )
+    */
+    // --------------------------------------------------------------------
+    interp.add_generic_entry("@field", interp => {
+        let param_field = interp.pop()
+        let param_object = interp.pop()
+
+        let fields = param_field.value.split(".")
+        let last_field = fields.pop()
+        let obj = param_object.value
+        for (let i=0; i < fields.length; i++) {
+            obj = obj[fields[i]]
+        }
+        let result = obj[last_field]
+        let param_result = new BabylonParam(result, param_field.value)
+        interp.push(param_result)
+    })
+
+    // --------------------------------------------------------------------
+    /** Enable/disable debug
+    ( scene val -- )
+    */
+    // --------------------------------------------------------------------
+    interp.add_generic_entry("debug", interp => {
+        let param_val = interp.pop()
+        let param_scene = interp.pop()
+        if (param_val.get_value()) {
+            param_scene.value.debugLayer.show()
+        }
+        else {
+            param_scene.value.debugLayer.hide()
+        }
+    })
+
+    // --------------------------------------------------------------------
     /** Run render loop
     ( -- )
     */

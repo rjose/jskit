@@ -36,9 +36,17 @@ let ex1_forth = `
 
    "light2" 0 1 0 Vector3  HemisphericLight
 
-   1 6 to  "'cube1-\\0' 0.5 Mesh.CreateBox" map
-   1 6 to  "pop \\0  @cube1-\\0  !position.x" map
+   # (val cube -- )
+   : !x  "position.x" !field ;
 
+   1 6 to  "pop 'cube1-\\0' 0.5 Mesh.CreateBox
+                \\0 @cube1-\\0 !x" map pop
+
+#   1 6 to  "pop 'cube1-\\0' 0.5 Mesh.CreateBox" map pop
+#   1 6 to  "pop  \\0 @cube1-\\0 !x" map pop
+
+   : nodebug  @scene2 0 debug ;
+   : debug  @scene2 1 debug ;
    run
 `
 

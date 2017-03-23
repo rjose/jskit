@@ -58,7 +58,8 @@ class Interpreter {
 
     find_entry(word) {
         for (let i=this.dictionary.length - 1; i >= 0; i--) {
-            if (this.dictionary[i].word == word) {
+            let entry = this.dictionary[i]
+            if (entry.word == word && entry.complete) {
                 return this.dictionary[i]
             }
         }
@@ -166,19 +167,19 @@ class Interpreter {
        let match = null
 
        if (match = this.input_string.match(/^(-?\d+\.\d*)(.*)/)) {
-          this.input_string = match[2].trim() 
+          this.input_string = match[2].trim()
           return {type: 'D', value: match[1]}
-       } 
+       }
        else if (match = this.input_string.match(/^(-?\d+)(.*)/)) {
-          this.input_string = match[2].trim() 
+          this.input_string = match[2].trim()
           return {type: 'I', value: match[1]}
        }
        else if (match = this.input_string.match(/^"([^"]*)"(.*)/)) {
-          this.input_string = match[2].trim() 
+          this.input_string = match[2].trim()
           return {type: 'S', value: match[1]}
        }
        else if (match = this.input_string.match(/^(\S+)(.*)/)) {
-          this.input_string = match[2].trim() 
+          this.input_string = match[2].trim()
           return {type: 'W', value: match[1]}
        }
 
