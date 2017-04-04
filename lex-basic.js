@@ -1,3 +1,5 @@
+/** Wraps a variable so its value can be set or retrieved
+*/
 class VariableParam extends Param {
     constructor(val) {
         super('V', val)
@@ -5,6 +7,10 @@ class VariableParam extends Param {
 }
 
 
+/** Defines an entry for retrieving a variable
+
+( -- var )
+*/
 class VariableEntry extends Entry {
     constructor(word) {
         super(word)
@@ -25,6 +31,8 @@ class VariableEntry extends Entry {
 }
 
 
+/** Adds a core lexicon to an interpreter
+*/
 function add_basic_lexicon(interp) {
 
     /** Multiplies two numbers
@@ -51,8 +59,8 @@ function add_basic_lexicon(interp) {
     (a b -- b a)
     */
     interp.add_generic_entry("swap", interp => {
-        let param_b = interp.pop() 
-        let param_a = interp.pop() 
+        let param_b = interp.pop()
+        let param_a = interp.pop()
         interp.push(param_b)
         interp.push(param_a)
     })
@@ -62,7 +70,7 @@ function add_basic_lexicon(interp) {
     (a -- )
     */
     interp.add_generic_entry("pop", interp => {
-        interp.pop() 
+        interp.pop()
     })
 
 
@@ -70,17 +78,17 @@ function add_basic_lexicon(interp) {
     (name -- )
     */
     interp.add_generic_entry("variable", interp => {
-        let param_name = interp.pop() 
+        let param_name = interp.pop()
         interp.add_entry(new VariableEntry(param_name.value))
     })
 
 
     /** Sets a variable value
-    (value Variable -- )
+    (value var -- )
     */
     interp.add_generic_entry("!", interp => {
-        let param_variable = interp.pop() 
-        let param_value = interp.pop() 
+        let param_variable = interp.pop()
+        let param_value = interp.pop()
         param_variable.value.set_value(param_value)
     })
 
@@ -89,8 +97,34 @@ function add_basic_lexicon(interp) {
     (Variable -- value)
     */
     interp.add_generic_entry("@", interp => {
-        let param_variable = interp.pop() 
+        let param_variable = interp.pop()
         let result = param_variable.value.get_value()
         interp.push(result)
+    })
+
+
+    /** Executes a string
+    (string -- )
+    */
+    interp.add_generic_entry("execute", interp => {
+        let param_string = interp.pop()
+        interp.execute_string(param_string.value)
+    })
+
+
+    /** console.log something
+    (object -- )
+    */
+    interp.add_generic_entry("log", interp => {
+        let param_object = interp.pop()
+        console.log("LOG", param_object)
+    })
+
+
+    /** Print stack
+    ( -- )
+    */
+    interp.add_generic_entry(".s", interp => {
+        console.log(interp.stack)
     })
 }

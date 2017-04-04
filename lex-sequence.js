@@ -1,3 +1,5 @@
+/** Wraps a sequence
+*/
 class SequenceParam extends Param {
     constructor(value) {
         super('C', value)
@@ -6,6 +8,8 @@ class SequenceParam extends Param {
 }
 
 
+/** Indicates the beginning of a sequence
+*/
 class BeginSequenceParam extends Param {
     constructor(value) {
         super('C', value)
@@ -14,6 +18,8 @@ class BeginSequenceParam extends Param {
 }
 
 
+/** Adds lexicon for manipulating sequences of Param
+*/
 function add_sequence_lexicon(interp) {
 
     // --------------------------------------------------------------------
@@ -94,7 +100,7 @@ function add_sequence_lexicon(interp) {
             if (chr == '\\' && str[i+1] >= '0' && str[i+1] <= '9') {
                 let stack_pos = str[i+1] - '0'
                 let param = interp.peek(stack_pos)
-                result += param.value
+                result += param.value    // NOTE: We assume that we're interpolating a string value
                 i++
             }
             else {
@@ -122,7 +128,7 @@ function add_sequence_lexicon(interp) {
         let result = []
         sequence.forEach(param => {
             interp.push(param)
-            interp.execute_string(macro_subst(string, interp))
+            interp.interpret_string(macro_subst(string, interp))
             result.push(interp.pop())
         })
         interp.push(new SequenceParam(result))
@@ -146,6 +152,18 @@ function add_sequence_lexicon(interp) {
             result.push(new IntParam(cur))
             cur++
         }
+        interp.push(new SequenceParam(result))
+    })
+
+
+    // --------------------------------------------------------------------
+    /** Pushes stack as a sequence of Params
+    ( ... -- [Param])
+    */
+    // --------------------------------------------------------------------
+    interp.add_generic_entry("push-stack", interp => {
+        let result = []
+        interp.stack.forEach(p => result.push(p))
         interp.push(new SequenceParam(result))
     })
 }

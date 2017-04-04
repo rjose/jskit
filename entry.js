@@ -1,8 +1,9 @@
+/** Base class for dictionary entries
+*/
 class Entry {
     constructor(word) {
         this.word = word
         this.immediate = false
-        this.complete = true
         this.params = []
     }
 
@@ -16,6 +17,8 @@ class Entry {
 }
 
 
+/** An entry that can execute a routine
+*/
 class GenericEntry extends Entry {
     constructor(word, routine) {
         super(word)
@@ -28,52 +31,65 @@ class GenericEntry extends Entry {
 }
 
 
-class DefineEntry extends Entry {
+/** An entry that begins a definition
+*/
+class StartDefinitionEntry extends Entry {
     constructor(word) {
         super(word)
     }
 
     execute(interp) {
         let token = interp.get_token()
-
-        let entry_new = new Definition(token.value)
-        entry_new.complete = false
-        interp.add_entry(entry_new)
-
+        interp.latest_entry = new DefinitionEntry(token.value)
         interp.mode = 'C'
     }
 }
 
 
-class EndDefineEntry extends Entry {
+class EndDefinitionParam extends Param {
+    constructor(interp) {
+        super('PopReturnStack', null)
+        this.interp = interp
+        this.end_definition = true
+    }
+
+    execute() {
+        this.interp.pop_return_stack()
+    }
+}
+
+
+/** An entry that ends a definition
+*/
+class EndDefinitionEntry extends Entry {
     constructor(word) {
         super(word)
         this.immediate = true
     }
 
     execute(interp) {
-        let entry_latest = interp.get_latest_entry()
-        entry_latest.complete = true
-        entry_latest.add_entry_param(new PopReturnStackParam(interp))
-
+        interp.latest_entry.add_entry_param(new EndDefinitionParam(interp))
+        interp.add_entry(interp.latest_entry)
+        interp.latest_entry = null
         interp.mode = 'E'
     }
 }
 
 
-class Definition extends Entry {
+
+class DefinitionEntry extends Entry {
     constructor(word) {
         super(word)
     }
 
     execute(interp) {
-        interp.push_return_stack()
-        interp.ip = 0
-        let should_stop = false
-        while(!should_stop) {
-            let cur_param = this.params[interp.ip]
-            interp.ip++
-            should_stop = cur_param.execute()
+        interp.push_return_stack(0)
+        while(true) {
+            let cur_param = this.params[interp.get_ip()]
+            cur_param.execute()
+            if (cur_param.end_definition) break
+
+            interp.increment_ip()
         }
     }
 }

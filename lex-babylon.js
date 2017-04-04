@@ -1,3 +1,5 @@
+/** Wraps a Babylon object
+*/
 class BabylonParam extends Param {
     constructor(value, babylon_type) {
         super('B', value)
@@ -22,8 +24,8 @@ function add_babylon_lexicon(interp) {
     function make_var(var_name) {
         let make_var_str = '"' + var_name + '" variable'
         let make_accessor_str = ':  @' + var_name + ' ' + var_name + ' @ ; '
-        interp.execute_string(make_var_str)
-        interp.execute_string(make_accessor_str)
+        interp.interpret_string(make_var_str)
+        interp.interpret_string(make_accessor_str)
     }
 
 
@@ -34,7 +36,7 @@ function add_babylon_lexicon(interp) {
         make_var(name)
         let param_object = new BabylonParam(object, type)
         interp.push(param_object)
-        interp.execute_string(name + ' !')
+        interp.interpret_string(name + ' !')
     }
 
 
@@ -45,14 +47,14 @@ function add_babylon_lexicon(interp) {
     make_var("cur-scene")
 
     function get_cur_engine() {
-        interp.execute_string('@cur-engine')
+        interp.interpret_string('@cur-engine')
         let param_engine = interp.pop()
         return param_engine.value
     }
 
 
     function get_cur_scene() {
-        interp.execute_string('@cur-scene')
+        interp.interpret_string('@cur-scene')
         let param_scene = interp.pop()
         return param_scene.value
     }
@@ -75,7 +77,7 @@ function add_babylon_lexicon(interp) {
 
         add_babylon_object(engine, name, "Engine")
 
-        interp.execute_string('@' + name + ' cur-engine !')
+        interp.interpret_string('@' + name + ' cur-engine !')
     })
 
 
@@ -85,7 +87,7 @@ function add_babylon_lexicon(interp) {
     */
     // --------------------------------------------------------------------
     interp.add_generic_entry("Scene", interp => {
-        interp.execute_string('@cur-engine')
+        interp.interpret_string('@cur-engine')
 
         let param_engine = interp.pop()
         let param_name = interp.pop()
@@ -95,7 +97,7 @@ function add_babylon_lexicon(interp) {
 
         add_babylon_object(scene, name, "Scene")
 
-        interp.execute_string('@' + name + ' cur-scene !')
+        interp.interpret_string('@' + name + ' cur-scene !')
     })
 
 
