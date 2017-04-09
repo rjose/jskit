@@ -1,0 +1,15 @@
+#cli-input {
+   width: 500px;
+}
+
+#content li {
+    margin-bottom: 25px;
+}
+
+
+div.blue_box {
+    width: 500px;
+    height: 250px;
+    background-color: blue;
+    margin-top: -18px;
+}

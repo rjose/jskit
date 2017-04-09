@@ -20,15 +20,52 @@ function add_dom_lexicon(interp) {
     })
 
 
-    /** Converts a parameter to an li element
-    (param -- element)
+    /** Creates a new element
+    (tag -- element)
     */
-    interp.add_generic_entry("as-li", interp => {
-        let param = interp.pop() 
-        let li_element = document.createElement("li")
-        li_element.appendChild(document.createTextNode(param.type + ": " + param.value))
-        interp.push(new DOMParam(li_element))
+    interp.add_generic_entry("create_element", interp => {
+        let param_tag = interp.pop() 
+        let element = document.createElement(param_tag.value)
+        let param_object = new DOMParam(element)
+        interp.push(param_object)
     })
+
+
+    /** Appends an element to a parent element
+    (parent child -- )
+    */
+    interp.add_generic_entry("append_child", interp => {
+        let param_child = interp.pop() 
+        let param_parent = interp.pop() 
+        let parent = param_parent.value
+        parent.appendChild(param_child.value)
+    })
+
+
+    /** Wraps an element in an li
+    (element -- )
+    */
+    interp.add_generic_entry("li_wrap", interp => {
+        let param_element = interp.pop() 
+        let li = document.createElement("li")
+        li.appendChild(param_element.value)
+        interp.push(new DOMParam(li))
+    })
+
+
+
+    /** Sets attribute of an element
+    (element attr value -- )
+    */
+    interp.add_generic_entry("!attr", interp => {
+        let param_value = interp.pop() 
+        let param_attr = interp.pop() 
+        let param_element = interp.pop() 
+        let element = param_element.value
+
+        element.setAttribute(param_attr.value, param_value.value)
+    })
+
 
 
     /** Replaces content of a container

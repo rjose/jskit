@@ -73,6 +73,14 @@ function add_basic_lexicon(interp) {
         interp.pop()
     })
 
+    /** Duplicates an object
+    (a -- a a)
+    */
+    interp.add_generic_entry("dup", interp => {
+        let param_a = interp.peek(0)
+        interp.push(param_a)
+    })
+
 
     /** Creates a VariableEntry
     (name -- )

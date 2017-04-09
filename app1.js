@@ -7,9 +7,31 @@ function $k(str) {
     _interp.interpret_string(str)
 }
 
+
 document.addEventListener("DOMContentLoaded", function(event) {
-    $k(`# ( seq str -- )
-        : foreach  map pop ;`) 
-    $k(`[ 1 2 3 ] "2 *" foreach .s`)
-//    $k(`[ 1 2 3 ] "2 *" map .s`)
+    // Hook up command line input
+    let cli = document.getElementById("cli-input")
+    cli.addEventListener("keydown", kb_event => {
+        if (kb_event.key == "Enter") {
+            $k(cli.value)
+            cli.select()
+        }
+    })
+
+    let init = `
+        # Creates a div.blue_box
+        # ( -- bluebox )
+        : blue_box  "div" create_element
+                    dup "class" "blue_box" !attr
+        ;
+
+        # Adds a DOM element as an li to the content list
+        # ( element -- )
+        : ++   li_wrap
+               "content" elem
+               swap append_child
+        ;
+    `
+    $k(init)
+    $k("blue_box ++")
 });
