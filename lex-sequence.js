@@ -55,6 +55,46 @@ function add_sequence_lexicon(interp) {
 
 
     // --------------------------------------------------------------------
+    /** Pops sequence, copies it, and pushes reversed copy
+    ( [?] -- [?] )
+    */
+    // --------------------------------------------------------------------
+    interp.add_generic_entry("reverse", interp => {
+        let param_sequence = interp.pop()
+        let copy = param_sequence.value.slice()
+        copy.reverse()
+
+        interp.push(new SequenceParam(copy))
+    })
+
+
+    // --------------------------------------------------------------------
+    /** Appends a param to a sequence
+    ( [?] x -- )
+    */
+    // --------------------------------------------------------------------
+    interp.add_generic_entry("append", interp => {
+        let param_obj = interp.pop()
+        let param_sequence = interp.pop()
+
+        param_sequence.value.push(param_obj)
+    })
+
+
+    // --------------------------------------------------------------------
+    /** Unshift a param to a sequence
+    ( [?] x -- )
+    */
+    // --------------------------------------------------------------------
+    interp.add_generic_entry("unshift", interp => {
+        let param_obj = interp.pop()
+        let param_sequence = interp.pop()
+
+        param_sequence.value.unshift(param_obj)
+    })
+
+
+    // --------------------------------------------------------------------
     /** Gets nth element of a sequence
     ( [?] n -- x_n)
     */
@@ -65,6 +105,22 @@ function add_sequence_lexicon(interp) {
 
         let x_n = param_sequence.value[param_n.value]
         interp.push(x_n)
+    })
+
+
+    // --------------------------------------------------------------------
+    /** Deletes nth element of a sequence
+    ( [?] n -- [?])
+    */
+    // --------------------------------------------------------------------
+    interp.add_generic_entry("del", interp => {
+        let param_n = interp.pop()
+        let param_sequence = interp.pop()
+
+        // Remove nth item
+        param_sequence.value.splice(param_n.value, 1)
+
+        interp.push(param_sequence)
     })
 
 

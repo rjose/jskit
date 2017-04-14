@@ -91,6 +91,35 @@ function add_basic_lexicon(interp) {
     })
 
 
+    /** Sets an object property
+    (obj prop value -- )
+    */
+    interp.add_generic_entry("!prop", interp => {
+        let param_value = interp.pop()
+        let param_prop = interp.pop()
+        let param_obj = interp.pop()
+
+        let prop = param_prop.value
+        let value = param_value.value
+
+        param_obj.value[prop] = value
+    })
+
+
+    /** Adds two numbers
+    (n1 n2 -- n1+n2)
+    */
+    interp.add_generic_entry("+", interp => {
+        let param_n2 = interp.pop()
+        let param_n1 = interp.pop()
+
+        param_n1.value = param_n1.get_value() + param_n2.get_value()
+        interp.push(param_n1)
+    })
+
+
+
+
     /** Sets a variable value
     (value var -- )
     */

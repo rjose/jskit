@@ -19,15 +19,54 @@ document.addEventListener("DOMContentLoaded", function(event) {
     })
 
     let init = `
+        # Sets up a content variable that stores a list of the displayed content
+        "content" variable
+        : @content  content @ ;
+        [ ] content !
+
         # Creates a div.blue_box
         # ( -- bluebox )
         : blue_box  "div" create_element
                     dup "class" "blue_box" !attr
         ;
 
+
+        # Creates a div.red_box
+        # ( -- redbox )
+        : red_box  "div" create_element
+                    dup "class" "red_box" !attr
+        ;
+
+
+        # Refreshes UI based on current value of @content
+        # ( -- )
+        : refresh   "content" elem
+                    "innerHTML" "" !prop
+                    @content reverse "li_wrap
+                              'content' elem
+                              swap append_child" map pop
+        ;
+
+
+        # Adds a DOM element to @content
+        # ( element -- )
+        : ++   @content
+               swap append
+               refresh
+        ;
+
+
+        # Deletes a content item by its 1-based position
+        # ( 1_based_index -- )
+        : remove   -1 +
+                   @content swap del
+                   refresh
+        ;
+
+
         # Adds a DOM element as an li to the content list
         # ( element -- )
-        : ++   li_wrap
+        : ++_old   li_wrap
                "content" elem
                swap append_child
         ;

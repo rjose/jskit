@@ -13,3 +13,10 @@ div.blue_box {
     background-color: blue;
     margin-top: -18px;
 }
+
+div.red_box {
+    width: 500px;
+    height: 250px;
+    background-color: red;
+    margin-top: -18px;
+}
