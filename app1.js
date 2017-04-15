@@ -26,7 +26,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
              : s_\\0  swap \\0 ;" , execute
         ;
 
-        [ "append" "append_child" "del" ]  "make_swap_version" map pop
+        [ "append" "append_child" "del" ]  "make_swap_version" foreach
+
 
         # Sets up a content variable that stores a list of the displayed content
         "content" variable
@@ -51,10 +52,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         # ( -- )
         : refresh   "content" elem
                     "innerHTML" "" !prop
-                    @content reverse "li_wrap
-                                     'content' elem  s_append_child" map pop
+                    @content reverse   "li_wrap 'content' elem  s_append_child" foreach
         ;
-
 
 
         # Adds a DOM element to @content

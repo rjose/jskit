@@ -204,4 +204,12 @@ function add_sequence_lexicon(interp) {
         interp.stack.forEach(p => result.push(p))
         interp.push(new SequenceParam(result))
     })
+
+
+    // Add sequence definitions
+    interp.interpret_string(`
+        # Does a map and discards the resulting sequence
+        # ( [a] str -- )
+        : foreach  map pop ;
+    `)
 }
