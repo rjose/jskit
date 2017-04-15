@@ -19,6 +19,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
     })
 
     let init = `
+        # Creates a version of a function that does a swap before application
+        # ( func_name -- )
+        : make_swap_version
+            "pop
+             : s_\\0  swap \\0 ;" , execute
+        ;
+
+        [ "append" "append_child" "del" ]  "make_swap_version" map pop
+
         # Sets up a content variable that stores a list of the displayed content
         "content" variable
         : @content  content @ ;
@@ -43,34 +52,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
         : refresh   "content" elem
                     "innerHTML" "" !prop
                     @content reverse "li_wrap
-                              'content' elem
-                              swap append_child" map pop
+                                     'content' elem  s_append_child" map pop
         ;
+
 
 
         # Adds a DOM element to @content
         # ( element -- )
-        : ++   @content
-               swap append
-               refresh
-        ;
+        : ++   @content s_append refresh ;
 
 
         # Deletes a content item by its 1-based position
         # ( 1_based_index -- )
-        : remove   -1 +
-                   @content swap del
-                   refresh
-        ;
-
-
-        # Adds a DOM element as an li to the content list
-        # ( element -- )
-        : ++_old   li_wrap
-               "content" elem
-               swap append_child
+        : rem   -1 +
+                @content s_del
+                refresh
         ;
     `
+
     $k(init)
     $k("blue_box ++")
 });

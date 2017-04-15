@@ -148,24 +148,6 @@ function add_sequence_lexicon(interp) {
     })
 
 
-    function macro_subst(str, interp) {
-        let result = ''
-        for (let i=0; i < str.length; i++) {
-            let chr = str[i]
-            // If we see a backslash
-            if (chr == '\\' && str[i+1] >= '0' && str[i+1] <= '9') {
-                let stack_pos = str[i+1] - '0'
-                let param = interp.peek(stack_pos)
-                result += param.value    // NOTE: We assume that we're interpolating a string value
-                i++
-            }
-            else {
-                result += chr
-            }
-        }
-        return result
-    }
-
 
     // --------------------------------------------------------------------
     /** Maps a string against elements of a sequence
@@ -184,7 +166,7 @@ function add_sequence_lexicon(interp) {
         let result = []
         sequence.forEach(param => {
             interp.push(param)
-            interp.interpret_string(macro_subst(string, interp))
+            interp.interpret_string(string)
             result.push(interp.pop())
         })
         interp.push(new SequenceParam(result))

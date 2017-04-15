@@ -140,12 +140,23 @@ function add_basic_lexicon(interp) {
     })
 
 
+    /** Expands a macro
+    NOTE: We rely on the macro to pop any macro arguments that it uses
+    (string... string -- string... string)
+    */
+    interp.add_generic_entry(",", interp => {
+        let param_string = interp.pop()
+        let expanded = interp.macro_subst(param_string.value)
+        interp.push(new StringParam(expanded, this))
+    })
+
+
     /** Executes a string
     (string -- )
     */
     interp.add_generic_entry("execute", interp => {
         let param_string = interp.pop()
-        interp.execute_string(param_string.value)
+        interp.interpret_string(param_string.value)
     })
 
 

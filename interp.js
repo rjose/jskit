@@ -133,6 +133,25 @@ class Interpreter {
     }
 
 
+    macro_subst(str) {
+        let result = ''
+        for (let i=0; i < str.length; i++) {
+            let chr = str[i]
+            // If we see a backslash
+            if (chr == '\\' && str[i+1] >= '0' && str[i+1] <= '9') {
+                let stack_pos = str[i+1] - '0'
+                let param = this.peek(stack_pos)
+                result += param.value    // NOTE: We assume that we're interpolating a string value
+                i++
+            }
+            else {
+                result += chr
+            }
+        }
+        return result
+    }
+
+
     /** Interprets a string
     */
     interpret_string(str) {
@@ -201,15 +220,15 @@ class Interpreter {
     execute_token(token) {
         switch(token.type) {
             case 'D':
-                this.stack.push(new DoubleParam(token.value))
+                this.stack.push(new DoubleParam(token.value, this))
                 break;
 
             case 'I':
-                this.stack.push(new IntParam(token.value))
+                this.stack.push(new IntParam(token.value, this))
                 break;
 
             case 'S':
-                this.stack.push(new StringParam(token.value))
+                this.stack.push(new StringParam(token.value, this))
                 break;
 
             case 'W':
