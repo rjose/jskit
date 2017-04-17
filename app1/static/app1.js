@@ -1,6 +1,7 @@
 let _interp = new Interpreter([add_basic_lexicon,
                                add_sequence_lexicon,
                                add_dom_lexicon,
+                               add_ajax_lexicon,
                                add_babylon_lexicon])
 
 function $k(str) {
@@ -67,7 +68,32 @@ document.addEventListener("DOMContentLoaded", function(event) {
                 @content s_del
                 refresh
         ;
-    `
+
+
+        # Deletes all content
+        # ( -- )
+        : remall [ ] content !  refresh ;
+
+
+        # Gets data from /api/box_data and pushes onto stack as an array of strings
+        # ( -- obj )
+        : box_data  "/api/box_data" GET parse ;
+
+
+    ` // END init
+
+
+    /** Adds boxes to content based on an array of strings consisting of "red" and "blue"
+    ( obj -- )
+    */
+    _interp.add_generic_entry("add_boxes", interp => {
+        let param_array = interp.pop()
+        param_array.value.forEach(s => {
+            interp.interpret_string(s + "_box ++")
+        })
+    })
+
+
 
     $k(init)
     $k("blue_box ++")
