@@ -118,6 +118,22 @@ function add_babylon_lexicon(interp) {
 
 
     // --------------------------------------------------------------------
+    /** Creates a Color3
+    ( r g b -- Color3)
+    */
+    // --------------------------------------------------------------------
+    interp.add_generic_entry("Color3", interp => {
+        let b = pop_double()
+        let g = pop_double()
+        let r = pop_double()
+
+        let color = new BABYLON.Color3(r, g, b)
+        let param_color = new BabylonParam(color, "Color3")
+        interp.push(param_color)
+    })
+
+
+    // --------------------------------------------------------------------
     /** Creates a camera
     ( name pos -- )
     */
@@ -181,27 +197,77 @@ function add_babylon_lexicon(interp) {
 
 
     // --------------------------------------------------------------------
+    /** Creates a Sphere
+    ( name segments diameter -- )
+    */
+    // --------------------------------------------------------------------
+    interp.add_generic_entry("Mesh.CreateSphere", interp => {
+        let cur_scene = get_cur_scene()
+
+        let diameter = pop_double()
+        let segments = pop_double()
+        let param_name = interp.pop()
+        let name = param_name.value
+
+        let sphere = BABYLON.Mesh.CreateSphere(name, segments, diameter, cur_scene)
+        add_babylon_object(sphere, name, "Sphere")
+    })
+
+
+    // --------------------------------------------------------------------
+    /** Creates Ground
+    ( name width depth subdivisions -- )
+    */
+    // --------------------------------------------------------------------
+    interp.add_generic_entry("Mesh.CreateGround", interp => {
+        let cur_scene = get_cur_scene()
+
+        let subdivisions = pop_double()
+        let depth = pop_double()
+        let width = pop_double()
+        let param_name = interp.pop()
+        let name = param_name.value
+
+        let ground = BABYLON.Mesh.CreateGround(name, width, depth, subdivisions, cur_scene)
+        add_babylon_object(ground, name, "Ground")
+    })
+
+
+    // --------------------------------------------------------------------
     /** Sets the x position of an object
-    ( value object --  )
+    ( object value --  )
     */
     // --------------------------------------------------------------------
     interp.add_generic_entry("!position.x", interp => {
-        let param_object = interp.pop()
         let param_value = interp.pop()
+        let param_object = interp.pop()
 
         param_object.value.position.x = param_value.get_value()
     })
 
 
     // --------------------------------------------------------------------
+    /** Sets the y position of an object
+    ( object value --  )
+    */
+    // --------------------------------------------------------------------
+    interp.add_generic_entry("!position.y", interp => {
+        let param_value = interp.pop()
+        let param_object = interp.pop()
+
+        param_object.value.position.y = param_value.get_value()
+    })
+
+
+    // --------------------------------------------------------------------
     /** Sets the value of an object's field (can be nested)
-    ( value object field --  )
+    ( object field value --  )
     */
     // --------------------------------------------------------------------
     interp.add_generic_entry("!field", interp => {
+        let param_value = interp.pop()
         let param_field = interp.pop()
         let param_object = interp.pop()
-        let param_value = interp.pop()
 
         let fields = param_field.value.split(".")
         let last_field = fields.pop()
@@ -234,6 +300,17 @@ function add_babylon_lexicon(interp) {
     })
 
     // --------------------------------------------------------------------
+    /** Attaches camera to canvas so it can be controlled with the mouse
+    ( camera canvas -- )
+    */
+    // --------------------------------------------------------------------
+    interp.add_generic_entry("attachControl", interp => {
+        let param_canvas = interp.pop()
+        let param_camera = interp.pop()
+        param_camera.value.attachControl(param_canvas.value)
+    })
+
+    // --------------------------------------------------------------------
     /** Enable/disable debug
     ( scene val -- )
     */
@@ -257,6 +334,10 @@ function add_babylon_lexicon(interp) {
     interp.add_generic_entry("run", interp => {
         let cur_engine = get_cur_engine()
         let cur_scene = get_cur_scene()
+
+        window.addEventListener('resize', function() {
+            cur_engine.resize();
+        });
 
         cur_engine.runRenderLoop(function() {
             cur_scene.render()

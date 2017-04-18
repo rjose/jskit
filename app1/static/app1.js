@@ -89,7 +89,40 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
                    
 
-        : project_view  "project-view" canvas ;
+        : project_view1  "project-view" canvas ++
+                         "eng" "project-view" Engine
+                         "scene1" Scene
+                         "camera1"  5 5 -5 Vector3  FreeCamera
+                         "0 0 0 Vector3  @camera1  setTarget" execute
+
+                         "light1" 0 1 0 Vector3  HemisphericLight
+
+                         "cube1" 1 Mesh.CreateBox
+                         run
+        ;
+
+
+        : project_view   "project-view" canvas ++
+
+                         "eng" "project-view" Engine
+                         "scene1" Scene
+                         "@scene1 'clearColor' 0 1 0 Color3 !field" , execute
+
+                         "camera1"  0 5 -10 Vector3  FreeCamera
+                         "@camera1 'project-view' elem  attachControl" , execute
+                         "0 0 0 Vector3  @camera1  setTarget" execute
+
+                         "light1" 0 1 0 Vector3  HemisphericLight
+                         "@light1 'intensity' 0.7 !field" , execute
+
+                         "sphere1" 16 2 Mesh.CreateSphere
+                         "@sphere1 1 !position.y" execute
+
+                         "ground1" 6 6 2 Mesh.CreateGround
+
+                         "cube1" 1 Mesh.CreateBox
+                         run
+        ;
 
 
     ` // END init
@@ -106,7 +139,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     })
 
 
-
     $k(init)
-    $k("blue_box ++")
+    $k("project_view")
 });
