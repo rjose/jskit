@@ -175,4 +175,17 @@ function add_basic_lexicon(interp) {
     interp.add_generic_entry(".s", interp => {
         console.log(interp.stack)
     })
+
+
+    // Define ARGn variables
+    interp.interpret_string(`
+        "ARG0" variable
+        "ARG1" variable
+        "ARG2" variable
+        "ARG3" variable
+        "ARG4" variable
+        "ARG5" variable
+        "ARG6" variable
+        "ARG7" variable
+    `)
 }

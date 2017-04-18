@@ -206,6 +206,21 @@ function add_sequence_lexicon(interp) {
     })
 
 
+    // --------------------------------------------------------------------
+    /** Maps stack parameters to argument variables (up to 7)
+    ( val0 val1 .. [arg] -- )
+    */
+    // --------------------------------------------------------------------
+    interp.add_generic_entry("args", interp => {
+        let param_args = interp.pop()
+        let args = param_args.value
+        args.reverse().forEach(arg => {
+            interp.push(arg)
+            interp.interpret_string("!")
+        })
+    })
+
+
     // Add sequence definitions
     interp.interpret_string(`
         # Does a map and discards the resulting sequence

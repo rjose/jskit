@@ -80,6 +80,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
         : box_data  "/api/box_data" GET parse ;
 
 
+
+        # Creates a canvas with the given ID
+        # ( id -- canvas )
+        : canvas   [ ARG0 ] args
+                   "canvas" create_element
+                   dup "id" ARG0 @ !attr ;
+
+                   
+
+        : project_view  "project-view" canvas ;
+
+
     ` // END init
 
 

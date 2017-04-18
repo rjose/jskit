@@ -144,6 +144,9 @@ class Interpreter {
                 result += param.value    // NOTE: We assume that we're interpolating a string value
                 i++
             }
+            else if (chr == "'") {
+                result += '"'
+            }
             else {
                 result += chr
             }
