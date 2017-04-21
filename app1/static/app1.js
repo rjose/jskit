@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         ;
 
 
-        : project_view   "project-view" canvas ++
+        : project_view3   "project-view" canvas ++
 
                          # Load Babylon engine
                          [ "project-view" elem  true ] "new BABYLON.Engine" jscall
@@ -153,6 +153,91 @@ document.addEventListener("DOMContentLoaded", function(event) {
                          # Add objects
                          "[ 'sphere1'  16 2  scene @ ] 'BABYLON.Mesh.CreateSphere' jscall" , execute
                          "'sphere1' variable sphere1 !" , execute
+                         "1  [ sphere1 @  'position' 'y' ] !field" , execute
+
+                         "[ 'ground1'  6 6 2  scene @ ] 'BABYLON.Mesh.CreateGround' jscall" , execute
+                         "[ 'cube1'  1.5  scene @ ] 'BABYLON.Mesh.CreateBox' jscall" , execute
+
+                         # Run render loop
+                         "engine @  scene @  run"  execute
+        ;
+
+
+
+
+
+        : project_view4  "project-view" canvas ++
+
+                         # Load Babylon engine
+                         [ "project-view" elem  true ] "new BABYLON.Engine" "engine" jscall_mkvar
+
+                         # Create Scene
+                         "[ engine @ ] 'new BABYLON.Scene' 'scene' jscall_mkvar" , execute
+
+                         # Change background to green
+                         "0 1 0 Color3  [ scene @  'clearColor' ] !field" , execute
+
+                         # Add camera
+                         "[ 'camera1'  0 5 -10 Vector3  scene @ ] 'new BABYLON.FreeCamera' 'camera1' jscall_mkvar" , execute
+                         "[ 0 0 0 Vector3 ] [ camera1 @  'setTarget' ] objcall pop" , execute
+                         "[ 'project-view' elem  false ] [ camera1 @  'attachControl' ] objcall pop" , execute
+
+                         # Add light
+                         "[ 'light1'  0 1 0 Vector3  scene @ ] 'new BABYLON.HemisphericLight' 'light1' jscall_mkvar" , execute
+                         "0.7  [ light1 @  'intensity' ] !field" , execute
+
+                         # Add objects
+                         "[ 'sphere1'  16 2  scene @ ] 'BABYLON.Mesh.CreateSphere' 'sphere1' jscall_mkvar" , execute
+                         "1  [ sphere1 @  'position' 'y' ] !field" , execute
+
+                         "[ 'ground1'  6 6 2  scene @ ] 'BABYLON.Mesh.CreateGround' jscall" , execute
+                         "[ 'cube1'  1.5  scene @ ] 'BABYLON.Mesh.CreateBox' jscall" , execute
+
+                         # Run render loop
+                         "engine @  scene @  run"  execute
+        ;
+
+
+        # Loads Babylon engine
+        # ( canvas_id  name -- )
+        : load_engine  [ ARG0 ARG1 ] args
+                       [ ARG0 @ elem  true ] "new BABYLON.Engine"  ARG1 @  jscall_mkvar
+        ;
+
+
+        # Creates a scene
+        # ( engine name -- )
+        : make_scene  [ ARG0 ARG1 ] args
+                      [ ARG0 @ ] "new BABYLON.Scene"  ARG1 @  jscall_mkvar
+        ;
+
+        # Makes a named Babylon object
+        # This can be used with any function that takes a name as the first arg
+        # ( name args func_str -- )
+        : make_named  [ ARG0 ARG1 ARG2 ] args
+           ARG1 @  ARG0 @ unshift   ARG1 @  # Put name at the front of the args
+           ARG2 @  ARG0 @ jscall_mkvar
+        ;
+
+        : project_view   "project-view" canvas ++
+
+                         "project-view" "engine" load_engine
+                         "engine @  'scene' make_scene" , execute
+
+                         # Change background to green
+                         "0 1 0 Color3  [ scene @  'clearColor' ] !field" , execute
+
+                         # Add camera
+                         "'camera1'  [ 0 5 -10 Vector3  scene @ ] 'new BABYLON.FreeCamera' make_named" , execute
+                         "[ 0 0 0 Vector3 ] [ camera1 @  'setTarget' ] objcall pop" , execute
+                         "[ 'project-view' elem  false ] [ camera1 @  'attachControl' ] objcall pop" , execute
+
+                         # Add light
+                         "'light1'  [ 0 1 1 Vector3  scene @ ] 'new BABYLON.HemisphericLight' make_named" , execute
+                         "0.7  [ light1 @  'intensity' ] !field" , execute
+
+                         # Add objects
+                         "'sphere1'  [ 16 2  scene @ ] 'BABYLON.Mesh.CreateSphere' make_named" , execute
                          "1  [ sphere1 @  'position' 'y' ] !field" , execute
 
                          "[ 'ground1'  6 6 2  scene @ ] 'BABYLON.Mesh.CreateGround' jscall" , execute

@@ -99,4 +99,16 @@ function add_js_lexicon(interp) {
         interp.push(new JavascriptParam(obj))
     })
 
+
+    /** Like jscall, but names resulting object with a variable
+    (param_args func_str varname -- )
+    */
+    interp.add_generic_entry("jscall_mkvar", interp => {
+        param_varname = interp.pop()
+        interp.interpret_string("jscall")
+
+        // Create variable with varname and set its value to the result of the jscall
+        interp.push(param_varname)
+        interp.interpret_string("variable " + param_varname.value + " !")
+    })
 }
