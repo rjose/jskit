@@ -219,6 +219,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
            ARG2 @  ARG0 @ jscall_mkvar
         ;
 
+
+        # Sets a camera's target
+        # ( vec3 camera -- )
+        : set_target  [ ARG0 ARG1 ] args
+                      [ ARG0 @ ] [ ARG1 @ @  "setTarget" ] objcall pop ;
+
+
+
         : project_view   "project-view" canvas ++
 
                          "project-view" "engine" load_engine
@@ -229,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
                          # Add camera
                          "'camera1'  [ 0 5 -10 Vector3  scene @ ] 'new BABYLON.FreeCamera' make_named" , execute
-                         "[ 0 0 0 Vector3 ] [ camera1 @  'setTarget' ] objcall pop" , execute
+                         "0 0 0 Vector3  camera1 set_target" , execute
                          "[ 'project-view' elem  false ] [ camera1 @  'attachControl' ] objcall pop" , execute
 
                          # Add light
@@ -240,8 +248,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
                          "'sphere1'  [ 16 2  scene @ ] 'BABYLON.Mesh.CreateSphere' make_named" , execute
                          "1  [ sphere1 @  'position' 'y' ] !field" , execute
 
-                         "[ 'ground1'  6 6 2  scene @ ] 'BABYLON.Mesh.CreateGround' jscall" , execute
-                         "[ 'cube1'  1.5  scene @ ] 'BABYLON.Mesh.CreateBox' jscall" , execute
+                         "[ 'ground1'  6 6 2  scene @ ] 'BABYLON.Mesh.CreateGround' jscall pop" , execute
+                         "[ 'cube1'  1.5  scene @ ] 'BABYLON.Mesh.CreateBox' jscall pop" , execute
 
                          # Run render loop
                          "engine @  scene @  run"  execute
