@@ -1,4 +1,5 @@
 let _interp = new Interpreter([add_basic_lexicon,
+                               add_js_lexicon,
                                add_sequence_lexicon,
                                add_dom_lexicon,
                                add_ajax_lexicon,
@@ -87,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                    "canvas" create_element
                    dup "id" ARG0 @ !attr ;
 
-                   
+
 
         : project_view1  "project-view" canvas ++
                          "eng" "project-view" Engine
@@ -102,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         ;
 
 
-        : project_view   "project-view" canvas ++
+        : project_view2   "project-view" canvas ++
 
                          "eng" "project-view" Engine
                          "scene1" Scene
@@ -122,6 +123,43 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
                          "cube1" 1 Mesh.CreateBox
                          run
+        ;
+
+
+        : project_view   "project-view" canvas ++
+
+                         # Load Babylon engine
+                         [ "project-view" elem  true ] "new BABYLON.Engine" jscall
+                         "'engine' variable engine !" , execute
+
+                         # Create Scene
+                         "[ engine @ ] 'new BABYLON.Scene' jscall" , execute
+                         "'scene' variable scene !" , execute
+
+                         # Change background to green
+                         "0 1 0 Color3  [ scene @  'clearColor' ] !field" , execute
+
+                         # Add camera
+                         "[ 'camera1'  0 5 -10 Vector3  scene @ ] 'new BABYLON.FreeCamera' jscall" , execute
+                         "'camera1' variable camera1 !" , execute
+                         "[ 0 0 0 Vector3 ] [ camera1 @  'setTarget' ] objcall pop" , execute
+                         "[ 'project-view' elem  false ] [ camera1 @  'attachControl' ] objcall pop" , execute
+
+                         # Add light
+                         "[ 'light1'  0 1 0 Vector3  scene @ ] 'new BABYLON.HemisphericLight' jscall" , execute
+                         "'light1' variable light1 !" , execute
+                         "0.7  [ light1 @  'intensity' ] !field" , execute
+
+                         # Add objects
+                         "[ 'sphere1'  16 2  scene @ ] 'BABYLON.Mesh.CreateSphere' jscall" , execute
+                         "'sphere1' variable sphere1 !" , execute
+                         "1  [ sphere1 @  'position' 'y' ] !field" , execute
+
+                         "[ 'ground1'  6 6 2  scene @ ] 'BABYLON.Mesh.CreateGround' jscall" , execute
+                         "[ 'cube1'  1.5  scene @ ] 'BABYLON.Mesh.CreateBox' jscall" , execute
+
+                         # Run render loop
+                         "engine @  scene @  run"  execute
         ;
 
 
