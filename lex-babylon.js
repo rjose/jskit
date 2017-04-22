@@ -326,4 +326,49 @@ function add_babylon_lexicon(interp) {
             cur_scene.render()
         })
     })
+
+
+    // --------------------------------------------------------------------
+    // Add forth-defined words
+    // --------------------------------------------------------------------
+    interp.interpret_string(`
+        # Loads Babylon engine
+        # ( canvas_id  name -- )
+        : load_engine  [ ARG0 ARG1 ] args
+                       [ ARG0 @ elem  true ] "new BABYLON.Engine"  ARG1 @  jscall_mkvar
+        ;
+
+
+        # Creates a scene
+        # ( engine name -- )
+        : make_scene  [ ARG0 ARG1 ] args
+                      [ ARG0 @ ] "new BABYLON.Scene"  ARG1 @  jscall_mkvar
+        ;
+
+        # Makes a named Babylon object
+        # This can be used with any function that takes a name as the first arg
+        # ( name args func_str -- )
+        : make_named  [ ARG0 ARG1 ARG2 ] args
+           ARG1 @  ARG0 @ unshift   ARG1 @  # Put name at the front of the args
+           ARG2 @  ARG0 @ jscall_mkvar
+        ;
+
+
+        # Sets a camera's target
+        # ( vec3 camera -- )
+        : set_target  [ ARG0 ARG1 ] args
+                      [ ARG0 @ ] [ ARG1 @ @  "setTarget" ] objcall pop ;
+
+
+        # Zero vector
+        # ( -- vec3 )
+        : ZERO_VEC3  0 0 0 Vector3 ;
+
+
+        # Sets x position of object
+        # ( val obj -- )
+        : set_x  [ ARG0 ARG1 ] args
+                 ARG0 @  [ ARG1 @ "position" "x" ] !field
+        ;
+    `)
 }

@@ -3,8 +3,13 @@ from flask import Flask, render_template, jsonify
 app = Flask(__name__)
 
 @app.route('/')
-def hello():
+def home():
     return render_template("app1.html")
+
+
+@app.route('/2')
+def app2():
+    return render_template("app2.html")
 
 
 @app.route('/api/box_data')

@@ -91,19 +91,19 @@ function add_basic_lexicon(interp) {
     })
 
 
-    /** Sets an object property
-    (obj prop value -- )
-    */
-    interp.add_generic_entry("!prop", interp => {
-        let param_value = interp.pop()
-        let param_prop = interp.pop()
-        let param_obj = interp.pop()
-
-        let prop = param_prop.value
-        let value = param_value.value
-
-        param_obj.value[prop] = value
-    })
+//    /** Sets an object property
+//    (obj prop value -- )
+//    */
+//    interp.add_generic_entry("!prop", interp => {
+//        let param_value = interp.pop()
+//        let param_prop = interp.pop()
+//        let param_obj = interp.pop()
+//
+//        let prop = param_prop.value
+//        let value = param_value.value
+//
+//        param_obj.value[prop] = value
+//    })
 
 
     /** Adds two numbers
@@ -121,12 +121,34 @@ function add_basic_lexicon(interp) {
 
 
     /** Sets a variable value
+        If the top of the stack is a sequence, we treat the first element as an
+        object-valued variable and the remaining elements as selectors into that object.
+        The selectors determine what field is updated.
     (value var -- )
+    (value [ var selector_1 .. selector_n ] -- )
     */
     interp.add_generic_entry("!", interp => {
         let param_variable = interp.pop()
         let param_value = interp.pop()
-        param_variable.value.set_value(param_value)
+
+        if (param_variable.type == "V") {
+            param_variable.value.set_value(param_value)
+        }
+        else {
+            let param_seq = param_variable
+
+            let param_object = param_seq.value.shift()
+            let object = param_object.value
+            let fields = param_seq.value
+
+            // Construct field selector
+            let selector = fields.map(param_f => param_f.value).join(".")
+
+            // Construct string to set value
+            let value = param_value.value
+            let exec_str = "object." + selector + " = value"
+            eval(exec_str)
+        }
     })
 
 
