@@ -34,7 +34,7 @@ function add_js_lexicon(interp) {
         let selector = fields.map(param_f => param_f.value).join(".")
 
         // Construct string to set value
-        let value = param_value.value 
+        let value = param_value.value
         let exec_str = "object." + selector + " = value"
         eval(exec_str)
     })
@@ -46,8 +46,8 @@ function add_js_lexicon(interp) {
      param_selector: [ object field1 ... fieldn ]
     */
     interp.add_generic_entry("objcall", interp => {
-        let param_selector = interp.pop() 
-        let param_args = interp.pop() 
+        let param_selector = interp.pop()
+        let param_args = interp.pop()
 
         let args = param_args.value
         let arg_values = args.map(arg => arg.get_value())
@@ -56,7 +56,7 @@ function add_js_lexicon(interp) {
         let object = param_object.value
         let fields = param_selector.value
         let selector = fields.map(param_f => param_f.value).join(".")
-        let func_str = "object." + selector 
+        let func_str = "object." + selector
 
         // Build call string by dynamically referring to param arguments in args
         let call_str = func_str + "("
@@ -78,8 +78,8 @@ function add_js_lexicon(interp) {
     (param_args func_str -- js)
     */
     interp.add_generic_entry("jscall", interp => {
-        let param_func_str = interp.pop() 
-        let param_args = interp.pop() 
+        let param_func_str = interp.pop()
+        let param_args = interp.pop()
 
         let args = param_args.value
         let arg_values = args.map(arg => arg.get_value())
@@ -96,6 +96,16 @@ function add_js_lexicon(interp) {
             }
         }
         let obj = eval(call_str)
+        interp.push(new JavascriptParam(obj))
+    })
+
+
+    /** Executes a generic javascript string
+    (js_str -- js)
+    */
+    interp.add_generic_entry("jseval", interp => {
+        let param_js_str = interp.pop()
+        let obj = eval(param_js_str.value)
         interp.push(new JavascriptParam(obj))
     })
 

@@ -6,6 +6,12 @@ class VariableParam extends Param {
     }
 }
 
+class MapParam extends Param {
+    constructor(val) {
+        super('Map', val)
+    }
+}
+
 
 /** Defines an entry for retrieving a variable
 
@@ -159,6 +165,37 @@ function add_basic_lexicon(interp) {
         let param_variable = interp.pop()
         let result = param_variable.value.get_value()
         interp.push(result)
+    })
+
+
+    /** Creates a Map object from a sequence of 2n values
+    (param_seq -- Map)
+    */
+    interp.add_generic_entry("Map", interp => {
+        let param_seq = interp.pop()
+        let values = param_seq.value
+        if (values.length % 2 != 0) {
+            interp.handle_error("Arguments to Map should have even number of elements")
+            console.error(values)
+            return
+        }
+
+        let result = new Map()
+        for (let i=0; i <= values.length/2; i += 2) {
+            let key = values[i].get_value()
+            let val = values[i+1].get_value()
+            result[key] = val
+        }
+        interp.push(new MapParam(result))
+    })
+
+
+    /** Extracts raw value and pushes onto stack
+    (param -- raw_value)
+    */
+    interp.add_generic_entry("raw_value", interp => {
+        let param = interp.pop()
+        interp.push(param.value)
     })
 
 

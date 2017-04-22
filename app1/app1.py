@@ -12,6 +12,11 @@ def app2():
     return render_template("app2.html")
 
 
+@app.route('/6')
+def app6():
+    return render_template("app6.html")
+
+
 @app.route('/api/box_data')
 def box_data():
     return jsonify([ "red", "red", "blue", "red" ])
