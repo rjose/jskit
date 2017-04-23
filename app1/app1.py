@@ -22,6 +22,11 @@ def app8():
     return render_template("app8.html")
 
 
+@app.route('/15')
+def app15():
+    return render_template("app15.html")
+
+
 @app.route('/api/box_data')
 def box_data():
     return jsonify([ "red", "red", "blue", "red" ])
