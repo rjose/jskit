@@ -11,6 +11,20 @@ function $k(str) {
 
 
 document.addEventListener("DOMContentLoaded", function(event) {
+    /** Registers a click handler for a scene
+
+    ( scene -- )
+    */
+    _interp.add_generic_entry("register_click", interp => {
+        let param_scene = interp.pop()
+        let scene = param_scene.value
+
+        window.addEventListener("click", event => {
+            let result = scene.pick(scene.pointerX, scene.pointerY)
+            console.log(result)
+        })
+    })
+
     let init = `
         "app2-canvas" "engine" load_engine
         engine @ "scene" make_scene
@@ -44,6 +58,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         # Start animation
         [ Box1 @  0 100 true ] [ scene @  "beginAnimation" ] objcall pop
 
+        scene @  register_click
+
         # Render
         engine @  scene @ run
     ` // END init
@@ -51,4 +67,5 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
     $k(init)
+
 });
