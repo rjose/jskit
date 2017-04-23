@@ -21,9 +21,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         "treesManager" [ "/static/external/palm.png" 2000 800 scene @ ] "new BABYLON.SpriteManager" make_named
         "tree1" [ treesManager @ ] "new BABYLON.Sprite" make_named
 
-        10 [ tree1 @ "size" ] !
-        10 [ tree1 @ "position.x" ] !
-        5 [ tree1 @ "position.y" ] !
+        [ 10 "size"  5 "position.y" 10 "position.x" ]  tree1 @ !!
 
         # Create ground
         "groundMaterial" [ scene @ ] "new BABYLON.StandardMaterial" make_named

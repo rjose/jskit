@@ -158,6 +158,29 @@ function add_basic_lexicon(interp) {
     })
 
 
+    /** Sets multiple fields of an object
+    ([ v1 f1  v2 f2 ... vn fn ] obj -- )
+    */
+    interp.add_generic_entry("!!", interp => {
+        let param_obj = interp.pop()
+        let param_pairs = interp.pop()
+        let values = param_pairs.value
+        if (values.length % 2 != 0) {
+            interp.handle_error("Val/field arguments to !! should have an even number of elements")
+            return
+        }
+
+        let obj = param_obj.value
+        for (let i=0; i < values.length; i += 2) {
+            let val = values[i].get_value()
+            let field = values[i+1].get_value()
+            let cmd = "obj." + field + "= val"
+            eval(cmd)
+        }
+    })
+
+
+
     /** Gets a variable value
     (Variable -- value)
     */
@@ -181,7 +204,7 @@ function add_basic_lexicon(interp) {
         }
 
         let result = new Map()
-        for (let i=0; i <= values.length/2; i += 2) {
+        for (let i=0; i < values.length; i += 2) {
             let key = values[i].get_value()
             let val = values[i+1].get_value()
             result[key] = val
