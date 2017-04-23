@@ -133,6 +133,13 @@ class Interpreter {
     }
 
 
+    /** Performs a macro substituion on a string.
+
+        Single quotes are converted to double quotes.
+
+        Numbers preceded by "\\" are replaced with the string value of the position
+        on the stack. For instance, \\0 is replaced with the value at the top of the stack
+    */
     macro_subst(str) {
         let result = ''
         for (let i=0; i < str.length; i++) {

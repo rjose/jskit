@@ -2,7 +2,6 @@ let _interp = new Interpreter([add_basic_lexicon,
                                add_js_lexicon,
                                add_sequence_lexicon,
                                add_dom_lexicon,
-                               add_ajax_lexicon,
                                add_babylon_lexicon])
 
 function $k(str) {
