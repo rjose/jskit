@@ -199,7 +199,6 @@ function add_basic_lexicon(interp) {
         let values = param_seq.value
         if (values.length % 2 != 0) {
             interp.handle_error("Arguments to Map should have even number of elements")
-            console.error(values)
             return
         }
 

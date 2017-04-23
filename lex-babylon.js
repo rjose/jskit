@@ -345,12 +345,22 @@ function add_babylon_lexicon(interp) {
                       [ ARG0 @ ] "new BABYLON.Scene"  ARG1 @  jscall_mkvar
         ;
 
+        # Creates a variable varname and an accessor for it
+        # ( varname -- )
+        : mk_@var  "pop
+                   : @\\0  \\0 @ ;" , execute
+        ;
+
+
         # Makes a named Babylon object
         # This can be used with any function that takes a name as the first arg
         # ( name args func_str -- )
         : make_named  [ ARG0 ARG1 ARG2 ] args
            ARG1 @  ARG0 @ unshift   ARG1 @  # Put name at the front of the args
            ARG2 @  ARG0 @ jscall_mkvar
+
+           # Create accessor word
+           ARG0 @ mk_@var
         ;
 
 
